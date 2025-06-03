@@ -27,6 +27,7 @@ export default function Login() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await API.post(auth.login, data);
+      localStorage.setItem("token", response.data.token);
       toast.success("Login successful!");
       reset();
       router.push("/admin");

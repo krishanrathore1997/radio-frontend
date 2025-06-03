@@ -129,12 +129,10 @@ const { musicList, isLoading, isError, mutate } = useSongs(apiUrl);
       } catch (error: any) {
         setUploadProgress((prev) => prev.filter((track) => track.id !== fileObj.id));
 
-        if (error?.response?.status === 409) {
+        if (error) {
           const { message, song } = error.response.data;
           toast.error(`${message}: ${song}`);
-        } else {
-          toast.error("Upload failed. Please try again.");
-        }
+        } 
         console.error("Upload error:", error);
       }
     }
