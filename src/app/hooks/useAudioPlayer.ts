@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
 type AudioPlayerConfig = {
   fileUrl: string;
   startedAt: number; // Unix timestamp in seconds
-  duration: number;
+  duration: number;  // in seconds (can be 0 if live)
 };
 
 type UseAudioPlayerOptions = {
@@ -14,84 +14,81 @@ export const useAudioPlayer = (
   config: AudioPlayerConfig,
   options?: UseAudioPlayerOptions
 ) => {
-  const audioRef = useRef<HTMLAudioElement>(new Audio());
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [userInteracted, setUserInteracted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(1); // 0 to 1
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
 
-  // 🕒 Seek based on live offset
-  const seekToLiveOffset = () => {
-    const audio = audioRef.current;
-    const now = Date.now() / 1000;
-    const offset = Math.max(0, now - config.startedAt);
-    audio.currentTime = offset;
-  };
-
-  // 🔁 Sync current time
+  // ⏱️ Sync currentTime from <audio> element
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (audioRef.current && isPlaying) {
-        setCurrentTime(audioRef.current.currentTime);
-      }
-    }, 1000);
+    let interval: NodeJS.Timeout;
+
+    if (isPlaying && audioRef.current) {
+      interval = setInterval(() => {
+        setCurrentTime(audioRef.current!.currentTime);
+      }, 1000);
+    }
+
     return () => clearInterval(interval);
   }, [isPlaying]);
 
-  // 🔊 Volume
+  // 🔊 Sync volume & mute
   useEffect(() => {
-    audioRef.current.volume = isMuted ? 0 : volume;
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume;
+    }
   }, [volume, isMuted]);
 
-  // 🛑 Ended event
+  // 🔁 Handle onEnded event
   useEffect(() => {
     const audio = audioRef.current;
+    if (!audio) return;
+
     const handleEnded = () => {
       setIsPlaying(false);
-      options?.onEnded?.();
+      if (typeof options?.onEnded === 'function') {
+        options.onEnded();
+      }
     };
-    audio.addEventListener("ended", handleEnded);
-    return () => audio.removeEventListener("ended", handleEnded);
+
+    audio.addEventListener('ended', handleEnded);
+    return () => audio.removeEventListener('ended', handleEnded);
   }, [options]);
 
   const handleUserStart = () => {
     const audio = audioRef.current;
-    audio.src = config.fileUrl;
+    if (!audio) return;
 
-    audio.onloadedmetadata = () => {
-      seekToLiveOffset();
-      audio
-        .play()
-        .then(() => {
-          setUserInteracted(true);
-          setIsPlaying(true);
-        })
-        .catch(console.error);
-    };
+    const now = Date.now() / 1000;
+    const offset = Math.max(0, now - config.startedAt);
+    audio.currentTime = offset;
+
+    audio.volume = isMuted ? 0 : volume;
+    audio
+      .play()
+      .then(() => {
+        setUserInteracted(true);
+        setIsPlaying(true);
+      })
+      .catch((err) => {
+        console.error('Audio play failed:', err);
+      });
   };
 
   const handlePlayPause = () => {
     const audio = audioRef.current;
+    if (!audio) return;
 
     if (isPlaying) {
       audio.pause();
       setIsPlaying(false);
     } else {
-      audio.src = config.fileUrl;
-      audio.onloadedmetadata = () => {
-        seekToLiveOffset();
-        audio
-          .play()
-          .then(() => setIsPlaying(true))
-          .catch(console.error);
-      };
-
-      // force reloading metadata if needed
-      if (audio.readyState >= 1) {
-        seekToLiveOffset();
-        audio.play().then(() => setIsPlaying(true)).catch(console.error);
-      }
+      audio
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(console.error);
     }
   };
 

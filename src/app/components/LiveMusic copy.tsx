@@ -117,7 +117,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import useLivemusic from '../hooks/useLivemusic';
+import useLivemusic from '../hooks/useLiveMusic';
 
 export default function NowPlaying() {
   const { title, fileUrl, startedAt, isLoading, isError } = useLivemusic();

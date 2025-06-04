@@ -18,6 +18,7 @@ interface FormData {
   email: string;
   password: string;
   password_confirmation: string;
+  confirmpassword: string;
   agree: boolean;
 }
 

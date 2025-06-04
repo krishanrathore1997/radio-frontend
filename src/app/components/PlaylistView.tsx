@@ -24,7 +24,7 @@ interface PlaylistProps {
 
 interface PlaylistViewProps {
   playlist: PlaylistProps;
-  onBack: () => void;
+  onClose: () => void;
   start_time?: string; // Optional external start_time prop for schedule
   end_time?: string; // Optional external start_time prop for schedule
 }
@@ -73,7 +73,7 @@ const formatTimeFromSeconds = (totalSeconds: number): string => {
   return s === 0 ? `${hh}:${mm}` : `${hh}:${mm}:${ss}`;
 };
 
-const PlaylistView: React.FC<PlaylistViewProps> = ({ playlist, onBack, start_time , end_time}) => {
+const PlaylistView: React.FC<PlaylistViewProps> = ({ playlist, onClose, start_time , end_time}) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const echoRef = useRef<any>(null);  // Reference to Echo instance
 
@@ -89,7 +89,7 @@ const PlaylistView: React.FC<PlaylistViewProps> = ({ playlist, onBack, start_tim
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
 
   // Use external start_time prop if passed, else playlist's start_time
-  const playlistStartTimeStr = start_time || playlist.start_time || null;
+  const playlistStartTimeStr = start_time || playlist.start_time || undefined;
   const playlistEndTimeStr = end_time || playlist.end_time || null;
   // Parse it to seconds or null
   const playlistStartSeconds = parseStartTimeToSeconds(playlistStartTimeStr);

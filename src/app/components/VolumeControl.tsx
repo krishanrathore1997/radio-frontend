@@ -1,7 +1,7 @@
 'use client';
 
 import { FaVolumeUp, FaVolumeMute, FaVolumeDown } from "react-icons/fa";
-import { Slider } from "./ui/slider";
+import * as Slider from "@radix-ui/react-slider";
 
 interface VolumeControlProps {
   volume: number; // 0 to 100
@@ -33,15 +33,18 @@ export function VolumeControl({
         </button>
 
         <div className="flex-1">
-          <Slider
+          <Slider.Root
+            className="relative flex items-center select-none touch-none w-full h-5"
             value={[volume]}
             onValueChange={onVolumeChange}
             max={100}
             step={1}
-            trackClassName="bg-white/20 h-2 rounded-full"
-            rangeClassName="bg-gradient-to-r from-purple-400 to-pink-400"
-            thumbClassName="w-5 h-5 bg-white border-2 border-purple-400 rounded-full shadow hover:scale-125 transition-transform"
-          />
+          >
+            <Slider.Track className="bg-white/20 relative grow rounded-full h-2">
+              <Slider.Range className="absolute bg-gradient-to-r from-purple-400 to-pink-400 h-full rounded-full" />
+            </Slider.Track>
+            <Slider.Thumb className="block w-5 h-5 bg-white border-2 border-purple-400 rounded-full shadow hover:scale-125 transition-transform" />
+          </Slider.Root>
         </div>
 
         <div className="w-10 text-right">
