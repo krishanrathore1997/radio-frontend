@@ -10,7 +10,7 @@ import API from '@/app/service/api';
 import playlist from '../endpoint/playlist';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { FaGripVertical } from 'react-icons/fa';
-import { formatSecondsToHMS } from '@/lib/formatTime';
+import { formatSecondsToHMS, formatSecondsToMinutes } from '@/lib/formatTime';
 import { start } from 'repl';
 
 type Music = {
@@ -330,8 +330,8 @@ export default function Playlist({ initialPlaylist,start_time, end_time, onSaveS
                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                       />
                       <div className="flex justify-between text-sm text-gray-500">
-                        <span>{formatSecondsToHMS(currentTime)}</span>
-                        <span>{formatSecondsToHMS(duration)}</span>
+                        <span>{formatSecondsToMinutes(currentTime)}</span>
+                        <span>{formatSecondsToMinutes(duration)}</span>
                       </div>
                     </div>
                   </div>
