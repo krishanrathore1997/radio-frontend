@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { FaPlay, FaPause,FaTrash } from "react-icons/fa";

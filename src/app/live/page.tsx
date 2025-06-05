@@ -1,4 +1,4 @@
-
+'use client';
 import LiveMusic from "@/app/components/LiveMusic"
 
 export default function Dashboard() {

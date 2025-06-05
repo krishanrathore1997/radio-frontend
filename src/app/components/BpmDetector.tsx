@@ -1,8 +1,12 @@
 "use client";
-
-import bpmDetective from "bpm-detective"; // Importing bpm-detective
+ // Importing bpm-detective
 
 const BpmDetector = async (file: File): Promise<number> => {
+   
+  if (typeof window === "undefined") {
+    throw new Error("BpmDetector can only be used in the browser");
+  }
+ const bpmDetective = (await import("bpm-detective")).default;
   return new Promise((resolve, reject) => {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     const reader = new FileReader();
