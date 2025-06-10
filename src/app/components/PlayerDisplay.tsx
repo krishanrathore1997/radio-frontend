@@ -12,6 +12,7 @@ interface PlayerDisplayProps {
   currentTime: number;
   duration: number;
   isPlaying: boolean;
+  activeUserCount?: number;
   onPlayPause: () => void;
   volume?: number;
   isMuted?: boolean;
@@ -25,6 +26,7 @@ export function PlayerDisplay({
   title,
   currentTime,
   duration,
+  activeUserCount,
   isPlaying,
   onPlayPause,
   volume = 50,
@@ -84,7 +86,7 @@ export function PlayerDisplay({
       {/* Time and Volume Button */}
       <div className="mt-4 flex items-center gap-4">
         <span className="text-3xl font-mono text-gray-700">
-          {formatTime(clampedTime)}
+          {/* {formatTime(clampedTime)} */} Active Users: {activeUserCount || 0}
         </span>
         <button
           onClick={handleVolumeToggle}

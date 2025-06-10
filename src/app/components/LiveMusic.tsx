@@ -12,6 +12,7 @@ export default function NowPlaying() {
     fileUrl,
     startedAt,
     duration,
+    activeUserCount,
     isLoading,
     isError,
     mutate, // ✅ get mutate from SWR hook
@@ -82,6 +83,7 @@ export default function NowPlaying() {
             currentTime={currentTime}
             duration={duration}
             isPlaying={isPlaying}
+            activeUserCount={activeUserCount}
             volume={volume}
             isMuted={isMuted}
             handleVolumeChange={handleVolumeChange}

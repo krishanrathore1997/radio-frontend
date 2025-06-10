@@ -1,7 +1,11 @@
 'use client';
+import { Music } from "lucide-react";
 import React, { useState, useRef } from "react";
 import DataTable from "react-data-table-component";
-import { FaPlay, FaPause,FaTrash } from "react-icons/fa";
+import { FaCirclePause, FaCirclePlay, FaMusic } from "react-icons/fa6";
+import { FiTrash2 } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
+import CoverImage from "@/app/components/CoverImage"; // Assuming you have a CoverImage component
 
 interface Song {
   id: number;
@@ -10,7 +14,9 @@ interface Song {
   title: string;
   artist: string;
   file_url: string;
+  cover_image: string;
 }
+
 
 interface TrackListProps {
   songs: Song[];
@@ -53,40 +59,54 @@ const TrackList: React.FC<TrackListProps> = ({
   };
 
   const columns = [
-    {
-      name: "Select",
-      cell: (row: Song) => (
-        <input
-          type="checkbox"
-          checked={selectedTracks.has(row.id)}
-          onChange={() => toggleSelection(row.id)}
-          className="accent-red-500"
+    // {
+    //   name: "Select",
+    //   cell: (row: Song) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={selectedTracks.has(row.id)}
+    //       onChange={() => toggleSelection(row.id)}
+    //       className="accent-red-500"
           
-        />
-      ),
-      width: "20px"
+    //     />
+    //     // <input
+    //   ),
+    //   width: "20px"
+    // },
+ // or any icon library you prefer
+
+    {
+      name: "",
+      cell: (row: Song) => <CoverImage imageUrl={row.cover_image} />,
+      className: "text-black-500",
+      sortable: false,
+      width: "100px",
     },
     {
       name: "Title",
       selector: (row: Song) => row.title.replace(/_/g, ' '),
+      className: "text-black-500",
       sortable: true,
-      width: "400px",
+      width: "auto",
     },  
     {
       name: "Artist",
       selector: (row: Song) => row.artist || "-",
+      className: "text-black-500",
       sortable: true,
       width: "200px",
     },
     {
       name: "Length",
       selector: (row: Song) => row.length || "-",
+      className: "text-black-500",
       sortable: true,
       width: "100px",
     },
     {
       name: "BPM",
       selector: (row: Song) => row.bpm || "-",
+      className: "text-black-500",
       sortable: true,
       width: "80px",
     },
@@ -96,15 +116,15 @@ const TrackList: React.FC<TrackListProps> = ({
         <div className="flex gap-2">
         <button
           onClick={() => handlePlayPause(row)}
-          className="text-red-500 hover:text-red-700 text-lg"
+          className="text-gray-500 hover:text-green-700 text-lg fsm-2"
         >
-          {playingId === row.id ? <FaPause /> : <FaPlay />}
+          {playingId === row.id ? <FaCirclePause /> : <FaCirclePlay />}
         </button>
         <button
-          onClick={() => handleDelete(row.id)}
+          onClick={() => handleDelete(row.id)}  
           className="text-red-500 hover:text-red-700 text-lg"
         >
-          <FaTrash />
+        <MdDelete size={20} />
         </button>
       </div>
       ),

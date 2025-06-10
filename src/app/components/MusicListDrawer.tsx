@@ -8,6 +8,7 @@ import useSongs from '../hooks/useSongs';
 import Songs from '../endpoint/songs';
 import CategoryDropdown from './CategoryDropdown';
 import PlayPauseButton from './PlayPauseButton';
+import CoverImage from '@/app/components/CoverImage'; // Assuming you have a CoverImage component
 
 interface MusicListDrawerProps {
   isOpen: boolean;
@@ -136,7 +137,7 @@ const MusicListDrawer: React.FC<MusicListDrawerProps> = ({
         <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-6 text-white">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-white bg-opacity-20 rounded-lg">
+              <div className="p-2 bg-opacity-20 rounded-lg">
                 <FaMusic size={20} />
               </div>
               <div>
@@ -146,7 +147,7 @@ const MusicListDrawer: React.FC<MusicListDrawerProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200"
+              className="p-2  hover:bg-opacity-20 rounded-lg transition-colors duration-200"
             >
               <FaTimes size={20} />
             </button>
@@ -250,12 +251,18 @@ const MusicListDrawer: React.FC<MusicListDrawerProps> = ({
                             className="relative cursor-pointer"
                             onClick={() => playSong(song)}
                           >
-                            <img
+                            {/* <img
                               src={song.cover_image}
                               alt={song.title}
                               className="w-14 h-14 object-cover rounded-lg shadow-md"
+                            /> */}
+                            <CoverImage
+                              imageUrl={song.cover_image}
+                              width="w-14"
+                              height="h-14"
+                              rounded="rounded-lg"
                             />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-200 flex items-center justify-center">
+                            <div className="absolute inset-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-200 flex items-center justify-center">
                               <PlayPauseButton
                                 isPlaying={isPlaying && isCurrent}
                               />

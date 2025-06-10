@@ -15,7 +15,7 @@ const UploadProgress: React.FC<UploadProgressProps> = ({ uploadProgress }) => {
   return (
     <div className="mt-8 px-6">
       <h3 className="text-lg font-semibold mb-4 text-red-500">Uploading Files</h3>
-      <ul className="space-y-4">
+      <ul className="space-y-4 max-h-40 overflow-y-auto">
         {uploadProgress.map((track) => (
           <li key={track.id} className="bg-gray-100 p-4 rounded-lg">
             <div className="flex justify-between mb-2">

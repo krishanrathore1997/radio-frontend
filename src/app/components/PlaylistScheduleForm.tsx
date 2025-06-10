@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import usePlaylist from '../hooks/usePlaylist';
-import useSchedule from '../hooks/useSchedule';
 import PlaylistView from './PlaylistView';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -14,6 +13,7 @@ import scheduleRoutes from '../endpoint/schedule';
 import API from '../service/api';
 import { set } from 'date-fns';
 import Playlist from './Playlist';
+import useScheduleToday from '../hooks/useScheduleToday';
 
 type Playlist = {
   id: number;
@@ -31,7 +31,7 @@ type PlaylistSchedule = {
 
 const PlaylistScheduleForm = () => {
   const { playlistList } = usePlaylist();
-  const { scheduleplaylist,start_time = null, end_time = null } = useSchedule();
+  const { scheduleplaylist,start_time = null, end_time = null } = useScheduleToday();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
 
@@ -123,7 +123,7 @@ const PlaylistScheduleForm = () => {
 
           <h1 className="text-xl font-bold text-gray-900 flex items-center gap-3">
             <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-               {show ? "My Schedule" : "Schedule Playlist"}
+               {show ? "Today Schedule" : "Schedule Playlist"}
             </span>
           </h1>
           
@@ -131,24 +131,24 @@ const PlaylistScheduleForm = () => {
             className="bg-red-500 hover:bg-black px-2 py-2 text-white rounded"
             onClick={() => setShow(!show)}
             >
-            {show ? "Back" : "My Schedule"}
+            {show ? "Back" : "Today Schedule"}
           </button>
             </div>
         </header>
 
         {show ? (
          scheduleplaylist ? (
-    <div className="bg-white rounded-2xl shadow-xl p-4 space-y-8">
+
         <Playlist
-                    initialPlaylist={scheduleplaylist}
-                    start_time={start_time}
-                    end_time={end_time}
-                    onSaveSuccess={() => {
-                      console.log("Playlist updated successfully");
-                      // You can add redirect logic here if needed
-                    }}
+          initialPlaylist={scheduleplaylist}
+          start_time={start_time}
+          end_time={end_time}
+          onSaveSuccess={() => {
+            console.log("Playlist updated successfully");
+            // You can add redirect logic here if needed
+        }}
                   />
-    </div>
+   
   ) : (
     <div className="text-center text-red-500 font-medium">
       No scheduled playlist found.
@@ -270,14 +270,6 @@ const PlaylistScheduleForm = () => {
         </form>)}
         {selectedPlaylist && (
           <div className="mt-10 pt-8 border-t border-gray-100">
-            <div className="mb-6">
-              <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  Playlist Preview
-                </span>
-                👁️
-              </h3>
-            </div>
             <div className="bg-gray-50 rounded-xl shadow-inner">
               {/* <PlaylistView 
                 playlist={selectedPlaylist}

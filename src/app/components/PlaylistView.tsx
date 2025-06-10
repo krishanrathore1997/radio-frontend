@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { FaPlay, FaPause, FaGripVertical, FaSearch, FaMusic, FaArrowLeft, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import CoverImage from './CoverImage';
 
 interface Song {
   id: number;
@@ -11,6 +12,7 @@ interface Song {
   bpm?: number;
   length?: string; // length is string like "4:56"
   file_url: string;
+  cover_image?: string; // Optional cover image URL
 }
 
 interface PlaylistProps {
@@ -185,18 +187,10 @@ const PlaylistView: React.FC<PlaylistViewProps> = ({ playlist, onClose, start_ti
   const columns = [
     {
       id: 'index',
-      name: '#',
-      cell: (row: Song, index: number) => (
+      name: '',
+      cell: (row: Song) => (
         <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-500">
-          {playingId === row.id ? (
-            <div className="flex space-x-1">
-              <div className="w-1 h-4 bg-green-500 animate-pulse" />
-              <div className="w-1 h-4 bg-green-500 animate-pulse" style={{ animationDelay: '0.2s' }} />
-              <div className="w-1 h-4 bg-green-500 animate-pulse" style={{ animationDelay: '0.4s' }} />
-            </div>
-          ) : (
-            index + 1
-          )}
+          <CoverImage imageUrl={row.cover_image} />
         </div>
       ),
       width: '48px',
@@ -300,9 +294,27 @@ const PlaylistView: React.FC<PlaylistViewProps> = ({ playlist, onClose, start_ti
         {/* Now Playing Card */}
         {currentSong && (
           <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-6 shadow-lg flex items-center space-x-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-green-500 text-white rounded-full">
-              <FaMusic size={20} />
-            </div>
+             <div className="relative w-24 h-24 flex-shrink-0">
+                    {currentSong.cover_image ? (
+                      <img
+                        src={currentSong.cover_image}
+                        alt="Cover"
+                        className="w-full h-full object-cover rounded"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded">
+                        <FaMusic className="text-gray-500" />
+                      </div>
+                    )}
+
+                    <button
+                      onClick={() => handlePlayPause(currentSong)}
+                      className="absolute inset-0 m-auto w-10 h-10 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition"
+                      title={playingId === currentSong.id ? 'Pause' : 'Play'}
+                    >
+                      {playingId === currentSong.id ? <FaPause size={14} /> : <FaPlay size={14} className="ml-0.5" />}
+                    </button>
+                  </div>
             <div className="flex-1">
               <h3 className="font-semibold text-lg text-gray-900">
                 {currentSong.title.replace(/_/g, ' ')}

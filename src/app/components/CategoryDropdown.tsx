@@ -56,7 +56,7 @@ export default function CategoryDropdown({ onCategoryChange }: CategoryDropdownP
         options={categoryOptions}
         value={selectedCategory}
         onChange={handleChange}
-        className="w-full p-2 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 ease-in-out"
+        className="w-full px-2 border-2 border-gray-200 rounded-md focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 ease-in-out"
         placeholder="Select a category"
         isDisabled={categoryOptions.length === 0}
         styles={{

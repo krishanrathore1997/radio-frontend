@@ -7,6 +7,7 @@ export function formatSecondsToHMS(totalSeconds: number): string {
   const pad = (n: number) => n.toString().padStart(2, '0');
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
+
 export function formatSecondsToMinutes(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);

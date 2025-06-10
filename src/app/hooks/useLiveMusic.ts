@@ -8,6 +8,7 @@ interface MusicResponse {
   file_url: string;
   started_at: number;
   duration: number;
+active_user_count?: number; // Optional field for active user count
 }
 
 const useLiveMusic = () => {
@@ -21,6 +22,7 @@ const useLiveMusic = () => {
     fileUrl: data?.file_url,
     startedAt: data?.started_at,
     duration: data?.duration || 0,
+    activeUserCount: data?.active_user_count || 0, // Optional field for active user count
     isLoading,
     isError: !!error,
     mutate,

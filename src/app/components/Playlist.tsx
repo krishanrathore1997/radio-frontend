@@ -12,7 +12,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import { FaGripVertical } from 'react-icons/fa';
 import { formatSecondsToHMS, formatSecondsToMinutes } from '@/lib/formatTime';
 import { start } from 'repl';
-
+import CoverImage from '@/app/components/CoverImage'; // Assuming you have a CoverImage component
 type Music = {
   id: number;
   title: string;
@@ -55,6 +55,7 @@ const parseLengthToSeconds = (length?: string | number): number => {
   
   return 0;
 };
+
 export default function Playlist({ initialPlaylist,start_time, end_time, onSaveSuccess }: PlaylistProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playlistId, setPlaylistId] = useState<number | null>(null);
@@ -310,9 +311,28 @@ export default function Playlist({ initialPlaylist,start_time, end_time, onSaveS
               {/* Now Playing Bar */}
               {currentSong && (
                 <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 shadow-lg flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                  <div className="flex items-center justify-center w-16 h-16 bg-green-500 text-white rounded-full flex-shrink-0">
-                    <FaMusic size={20} />
+                  <div className="relative w-24 h-24 flex-shrink-0">
+                    {currentSong.cover_image ? (
+                      <img
+                        src={currentSong.cover_image}
+                        alt="Cover"
+                        className="w-full h-full object-cover rounded"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded">
+                        <FaMusic className="text-gray-500" />
+                      </div>
+                    )}
+
+                    <button
+                      onClick={() => handlePlayPause(currentSong)}
+                      className="absolute inset-0 m-auto w-10 h-10 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition"
+                      title={playingId === currentSong.id ? 'Pause' : 'Play'}
+                    >
+                      {playingId === currentSong.id ? <FaPause size={14} /> : <FaPlay size={14} className="ml-0.5" />}
+                    </button>
                   </div>
+
                   <div className="flex-1 w-full">
                     <h3 className="font-semibold text-lg text-gray-900">
                       {currentSong.title.replace(/_/g, ' ')}
@@ -426,13 +446,7 @@ export default function Playlist({ initialPlaylist,start_time, end_time, onSaveS
                                     
                                     <div className="flex-1 min-w-0">
                                       <div className="flex items-center gap-3">
-                                        {song.cover_image && (
-                                          <img 
-                                            src={song.cover_image} 
-                                            alt={song.title}
-                                            className="w-10 h-10 rounded-md object-cover"
-                                          />
-                                        )}
+                                     <CoverImage imageUrl={song.cover_image} />
                                         <div>
                                           <p className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
                                             {song.title.replace(/_/g, ' ')}

@@ -1,8 +1,12 @@
+import { View } from "lucide-react";
+
 const schedule = {
     add: "/schedule/store",
     update: "/schedule/update",
     delete: "/schedule/delete",
-    list: "/schedule/today",
+    today: "/schedule/today",
+    list: "/schedule/list",
+    view: "/schedule/view",
 };
 
 export default schedule;
