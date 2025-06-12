@@ -6,6 +6,7 @@ import useLiveMusic from '../hooks/useLiveMusic';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { PlayerDisplay } from './PlayerDisplay';
 
+
 export default function NowPlaying() {
   const {
     title,
@@ -17,7 +18,7 @@ export default function NowPlaying() {
     isError,
     mutate, // ✅ get mutate from SWR hook
   } = useLiveMusic();
-
+console.log('NowPlaying component rendered',fileUrl);
   const {
     audioRef,
     userInteracted,

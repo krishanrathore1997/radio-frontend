@@ -85,9 +85,10 @@ export function PlayerDisplay({
 
       {/* Time and Volume Button */}
       <div className="mt-4 flex items-center gap-4">
-        <span className="text-3xl font-mono text-gray-700">
-          {/* {formatTime(clampedTime)} */} Active Users: {activeUserCount || 0}
-        </span>
+        {/* <span className="text-3xl font-mono text-gray-700">
+          {formatTime(clampedTime)} 
+        </span> */}
+        Active Users: {activeUserCount || 0}
         <button
           onClick={handleVolumeToggle}
           className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
