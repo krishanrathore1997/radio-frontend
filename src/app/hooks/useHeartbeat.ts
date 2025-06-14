@@ -8,7 +8,7 @@ export default function useHeartbeat() {
     };
 
     ping(); // ping immediately
-    const interval = setInterval(ping, 30000); // ping every 30 seconds
+    const interval = setInterval(ping, 10000); // ping every 30 seconds
 
     return () => clearInterval(interval);
   }, []);
