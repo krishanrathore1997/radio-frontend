@@ -1,4 +1,5 @@
 'use client';
+
 import { FaPlay, FaPause } from 'react-icons/fa';
 
 interface PlayerControlsProps {

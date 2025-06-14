@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 type AudioPlayerConfig = {
   fileUrl: string;
   startedAt: number; // Unix timestamp in seconds
-  duration: number;  // in seconds (can be 0 if live)
+  duration: number;
 };
 
 type UseAudioPlayerOptions = {
@@ -17,64 +17,71 @@ export const useAudioPlayer = (
   const audioRef = useRef<HTMLAudioElement>(null);
   const [userInteracted, setUserInteracted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1); // 0 to 1
+  const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
 
-  // ⏱️ Sync currentTime from <audio> element
+  // ⏱️ Periodically update currentTime for UI
   useEffect(() => {
     let interval: NodeJS.Timeout;
-
-    if (isPlaying && audioRef.current) {
+    if (audioRef.current) {
       interval = setInterval(() => {
-        setCurrentTime(audioRef.current!.currentTime);
+        const now = Date.now() / 1000;
+        const offset = Math.max(0, now - config.startedAt);
+        setCurrentTime(offset);
       }, 1000);
     }
-
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [config.startedAt]);
 
-  // 🔊 Sync volume & mute
+  // 🔊 Sync volume
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
 
-  // 🔁 Handle onEnded event
+  // 🛑 onEnded handler
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleEnded = () => {
       setIsPlaying(false);
-      if (typeof options?.onEnded === 'function') {
-        options.onEnded();
-      }
+      options?.onEnded?.();
     };
 
     audio.addEventListener('ended', handleEnded);
     return () => audio.removeEventListener('ended', handleEnded);
   }, [options]);
 
-  const handleUserStart = () => {
+  // 🚀 Always play from real-time offset
+  const calculateRealTimeOffset = () => {
+    const now = Date.now() / 1000;
+    return Math.max(0, now - config.startedAt);
+  };
+
+  const playFromRealTime = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const now = Date.now() / 1000;
-    const offset = Math.max(0, now - config.startedAt);
+    const offset = calculateRealTimeOffset();
     audio.currentTime = offset;
-
     audio.volume = isMuted ? 0 : volume;
+
     audio
       .play()
       .then(() => {
-        setUserInteracted(true);
         setIsPlaying(true);
+        setUserInteracted(true);
       })
       .catch((err) => {
-        console.error('Audio play failed:', err);
+        console.error('Playback failed:', err);
       });
+  };
+
+  const handleUserStart = () => {
+    playFromRealTime();
   };
 
   const handlePlayPause = () => {
@@ -85,10 +92,7 @@ export const useAudioPlayer = (
       audio.pause();
       setIsPlaying(false);
     } else {
-      audio
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(console.error);
+      playFromRealTime(); // ⬅ always sync to real-time, not last paused time
     }
   };
 
