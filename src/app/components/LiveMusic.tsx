@@ -5,11 +5,13 @@ import { FaMusic } from "react-icons/fa";
 import useLiveMusic from "../hooks/useLiveMusic";
 import { useAudioPlayer } from "../hooks/useAudioPlayer";
 import { PlayerDisplay } from "./PlayerDisplay";
+import useHeartbeat from "../hooks/useHeartbeat";
+
 
 export default function NowPlaying() {
   const echoRef = useRef<any>(null);
   const [connected, setConnected] = useState(false);
-
+  useHeartbeat(); 
   const {
     title,
     fileUrl,
